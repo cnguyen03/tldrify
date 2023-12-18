@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 function Menu() {
     return (
-        <div>
+        <div className="menu">
             <h1>TLDRify</h1>
         </div>
     );
@@ -27,15 +27,17 @@ function TextBox() {
 
     const handleSubmit = (event) => {
         event.preventDefault();
+        // sets link to input and clears input
         if (link !== inputValue) {
             setLink(inputValue);
-            setInputValue("Insert link here...");
+            setInputValue("");
+            document.getElementById("textbox").setAttribute("placeholder", "Insert link here...");
         }
     }
-    console.log(link);
+    // console.log(link);
 
     return (
-        <div>
+        <div className="textbox">
             <input
                 type="text"
                 id="textbox"
@@ -43,7 +45,9 @@ function TextBox() {
                 value={inputValue}
                 onChange={handleInputChange}
             />
-            <button onClick={handleSubmit}>Generate Summary!</button>
+            <div className="button">
+                <button onClick={handleSubmit}>Generate Summary!</button>
+            </div>
         </div>
     );
 }
