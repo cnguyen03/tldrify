@@ -1,6 +1,7 @@
-from flask import Flask, jsonify
+from flask import Flask, request, jsonify
 from flask_cors import CORS
-
+import requests 
+from bs4 import BeautifulSoup
 # app instance
 app = Flask(__name__)
 CORS(app)
@@ -8,12 +9,21 @@ CORS(app)
 # displaying it on frontend
 
 # /api/home
-@app.route("/api/home", methods=['GET'])
-def return_home():
-    return jsonify({
-        'message': "This is Calvin's messaage!",
-        'people': ['Calvin', 'Iris']
-    })
+@app.route("/api/home", methods=['GET', 'POST'])
+def handle_request():
+    # Code to process data sent from the front end
+    message = ""
+    data = request.get_json()
+    link = data.get("link")
+    response = requests.get(link)
+    if response.status_code == 200:
+        soup = BeautifulSoup(response.text, 'html.parser')
+
+        title = soup.title
+        message = "Summary for " + title.text
+    # Code to send a response to the front end
+    response = {"message": message}
+    return jsonify(response)
 
 
 if __name__ == "__main__":

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Button from './Button.jsx';
 
 function TextBox() {
@@ -39,7 +39,7 @@ function TextBox() {
             />
             <div className="button">
                 {/* send prop and link to Button module */}
-                <Button onClick={handleSubmit} link={link} />
+                <Button onClick={handleSubmit} link={link}></Button>
             </div>
         </div>
     );
