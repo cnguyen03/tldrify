@@ -23,4 +23,30 @@ body {
   background: linear-gradient(to bottom,
       transparent,
       rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
+
+}
+
+h1 {
+  font-size: 100px;
+  margin-bottom: 10px;
+}
+
+input {
+  color: black;
+  margin: 20px;
+  width: 300px;
+  padding: 10px;
+  border-radius: 5px;
+  background-color: #d3d3d3;
+}
+
+Button {
+  border: 1px solid white;
+  color: white;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.content {
+  margin-top: 10px;
 }
