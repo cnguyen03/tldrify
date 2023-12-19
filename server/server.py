@@ -15,12 +15,16 @@ def handle_request():
     message = ""
     data = request.get_json()
     link = data.get("link")
+    # Send an html request to the link
     response = requests.get(link)
     if response.status_code == 200:
         soup = BeautifulSoup(response.text, 'html.parser')
-
-        title = soup.title
-        message = "Summary for " + title.text
+        # Parse the text and add it to message
+        all_text = [p.text for p in soup.find_all('p')]
+        for paragraph in all_text:
+            message += paragraph
+        # Send message to OpenAI API
+        
     # Code to send a response to the front end
     response = {"message": message}
     return jsonify(response)
