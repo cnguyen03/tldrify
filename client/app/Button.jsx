@@ -21,6 +21,7 @@ function Button({ onClick, link }) {
                 .then((response) => response.json())
                 .then((data) => {
                     setContent(data.message);
+                    console.log(data.message);
                 });
             setButtonClicked(false);
         }
