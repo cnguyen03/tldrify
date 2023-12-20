@@ -3,10 +3,9 @@ from flask_cors import CORS
 import requests 
 from bs4 import BeautifulSoup
 from openai import OpenAI
-import nltk
+
 from nltk.tokenize import word_tokenize
 
-nltk.download('punkt')
 # app instance
 app = Flask(__name__)
 CORS(app)
@@ -42,7 +41,8 @@ def handle_request():
         all_text = soup.get_text()
         words = word_tokenize(all_text)
         message = ' '.join(words)
-
+        # Additional Processing of Message
+        
         # Send message to OpenAI API
         completion = client.chat.completions.create(
         model="gpt-3.5-turbo",
