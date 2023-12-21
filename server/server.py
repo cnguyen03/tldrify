@@ -17,7 +17,7 @@ my_key = open("API_KEY.txt", "r").read()
 client = OpenAI(api_key=my_key)
 
 # Steps to get app running 
-# 1. Open new terminal, go to client directory and run source /.bashrc
+# 1. Open new terminal, go to client directory and run source ~/.bashrc
 # 2. Run the Next js server
     # npm run dev
 # 3. Go to server directory and go into a venv
@@ -42,7 +42,7 @@ def handle_request():
         words = word_tokenize(all_text)
         message = ' '.join(words)
         # Additional Processing of Message
-        
+
         # Send message to OpenAI API
         completion = client.chat.completions.create(
         model="gpt-3.5-turbo",

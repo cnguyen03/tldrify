@@ -30,12 +30,13 @@ function TextBox() {
 
     return (
         <div className="textbox">
-            <input
+            <input className="text-white mt-12 mb-5 w-80 p-3 rounded-xl bg-slate-700"
                 type="text"
                 id="textbox"
                 placeholder="Insert link here..."
                 value={inputValue}
                 onChange={handleInputChange}
+
             />
             <div className="button">
                 {/* send prop and link to Button module */}
