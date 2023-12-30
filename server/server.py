@@ -2,19 +2,18 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import requests 
 from bs4 import BeautifulSoup
-from openai import OpenAI
 
 from nltk.tokenize import word_tokenize
 
+from transformers import pipeline
 # app instance
 app = Flask(__name__)
 CORS(app)
 # use next.js frontend to fetch flask backend route and grab data sent,
 # displaying it on frontend
 
-# OpenAI
-my_key = open("API_KEY.txt", "r").read()
-client = OpenAI(api_key=my_key)
+# AI Pipeline
+summarizer = pipeline("summarization")
 
 # Steps to get app running 
 # 1. Open new terminal, go to client directory and run source ~/.bashrc
@@ -29,33 +28,52 @@ client = OpenAI(api_key=my_key)
 @app.route("/api/home", methods=['GET', 'POST'])
 def handle_request():
     # Code to process data sent from the front end
-    message = ""
-    content = ""
     data = request.get_json()
     link = data.get("link")
-    # Send an html request to the link
-    response = requests.get(link)
+    # Parse page for text
+    text = parse(link) 
+
+    max_chunk = 900
+    text = text.replace('.', '.<eos>')
+    text = text.replace('?', '?<eos>')
+    text = text.replace('!', '!<eos>')
+
+    sentences = text.split('<eos>')
+    current_chunk = 0 
+    chunks = []
+    for sentence in sentences:
+        if len(chunks) == current_chunk + 1: 
+            if len(chunks[current_chunk]) + len(sentence.split(' ')) <= max_chunk:
+                chunks[current_chunk].extend(sentence.split(' '))
+            else:
+                current_chunk += 1
+                chunks.append(sentence.split(' '))
+        else:
+            print(current_chunk)
+            chunks.append(sentence.split(' '))
+
+    for chunk_id in range(len(chunks)):
+        chunks[chunk_id] = ' '.join(chunks[chunk_id])
+
+    res = summarizer(chunks, max_length=500, min_length=30, do_sample=False)
+    text = ' '.join([summ['summary_text'] for summ in res])
+
+    response = {"message": text}
+    return jsonify(response)
+
+def parse(url):
+    response = requests.get(url)
     if response.status_code == 200:
         soup = BeautifulSoup(response.text, 'html.parser')
-        # Parse the text and add it to message
-        all_text = soup.get_text()
-        words = word_tokenize(all_text)
+        # parse the text and add it to message
+        paragraphs = soup.find_all(['p', 'h1'])
+        all_text = [paragraph.text for paragraph in paragraphs]
+        # tokenize text to words
+        words = word_tokenize(' '.join(all_text))
         message = ' '.join(words)
-        # Additional Processing of Message
-
-        # Send message to OpenAI API
-        completion = client.chat.completions.create(
-        model="gpt-3.5-turbo",
-        messages=[
-                {"role": "user", "content": f"Please give me a TLDR of the following text: {message}"}
-            ]
-        )
-        content = completion.choices[0].message.content
-    else:
-        message = f"Failed to retrieve the page. Status code: {response.status_code}"
-    # Code to send a response to the front end
-    response = {"message": content}
-    return jsonify(response)
+        return message
+    else: 
+        return "Invalid URL"
 
 
 if __name__ == "__main__":

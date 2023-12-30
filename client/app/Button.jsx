@@ -4,10 +4,18 @@ import PropTypes from 'prop-types';
 function Button({ onClick, link }) {
     const [content, setContent] = useState("");
     const [buttonClicked, setButtonClicked] = useState(false);
+    let loadMessage = "Loading summary for " + link;
 
     useEffect(() => {
         if (buttonClicked) {
-            setContent("Loading summary for " + link);
+            let index = 0;
+            const interval = setInterval(() => {
+                setContent(loadMessage.substring(0, index));
+                index++;
+                if (index > loadMessage.length) {
+                    clearInterval(interval);
+                }
+            }, 15);
             fetch("http://localhost:8080/api/home",
                 {
                     method: 'POST',
@@ -19,15 +27,13 @@ function Button({ onClick, link }) {
                 })
                 .then((response) => response.json())
                 .then((data) => {
-                    // setContent(data.message);
-                    // console.log(data.message);
                     const message = data.message
-                    let index = 0;
-                    const interval = setInterval(() => {
-                        setContent(message.substring(0, index));
-                        index++;
-                        if (index > message.length) {
-                            clearInterval(interval);
+                    let index2 = 0;
+                    const interval2 = setInterval(() => {
+                        setContent(message.substring(0, index2));
+                        index2++;
+                        if (index2 > message.length) {
+                            clearInterval(interval2);
                         }
                     }, 15);
                 });
