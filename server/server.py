@@ -33,7 +33,7 @@ def handle_request():
     # Parse page for text
     text = parse(link) 
 
-    max_chunk = 900
+    max_chunk = 500
     text = text.replace('.', '.<eos>')
     text = text.replace('?', '?<eos>')
     text = text.replace('!', '!<eos>')
@@ -55,7 +55,7 @@ def handle_request():
     for chunk_id in range(len(chunks)):
         chunks[chunk_id] = ' '.join(chunks[chunk_id])
 
-    res = summarizer(chunks, max_length=500, min_length=30, do_sample=False)
+    res = summarizer(chunks, max_length=200, min_length=30, do_sample=False)
     text = ' '.join([summ['summary_text'] for summ in res])
 
     response = {"message": text}
