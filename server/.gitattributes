@@ -1,0 +1,4 @@
+/Users/calvinnguyen/Downloads/tldrify-space/tldrify/server filter=lfs diff=lfs merge=lfs -text
+https://www.tensorflow.org/install/ filter=lfs diff=lfs merge=lfs -text
+server/venv/lib/python3.10/site-packages/clang/native/libclang.dylib filter=lfs diff=lfs merge=lfs -text
+server/venv/lib/python3.10/site-packages/tensorflow/libtensorflow_cc.2.dylib filter=lfs diff=lfs merge=lfs -text
